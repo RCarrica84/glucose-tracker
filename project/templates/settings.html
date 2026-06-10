@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block main%}
+<div class="settings">
+<div class="card-container">
+    <div class="glass-card">
+        <form method="post">
+            <h3>My settings</h3>
+            <p class="settings">Insulin carbohydrate ratio - ICR:</p>
+            <input type="text" name="icr" placeholder="ICR" value="{{ settings.icr }}"/>
+            <p class="settings">Insulin sensitivity factor - ISF:</p>
+            <input type="text" name="isf" placeholder="ISF" value="{{ settings.isf }}"/>
+            <p class="settings">Target Glucose:</p>
+            <input type="text" name="target_glucose" placeholder="Target glucose" value="{{ settings.target_glucose }}"/>
+            <p class="settings">Pre-bolus target range (min, max):</p>
+            <input type="text" name="target_range_min" placeholder="Minimun target" value="{{ settings.target_range_min }}" />
+            <input type="text" name="target_range_max" placeholder="Maximun Target" value="{{ settings.target_range_max }}"/>
+            <button type="submit">Update</button>
+        </form>
+    </div>
+</div>
+</div>
+{% endblock %}
+

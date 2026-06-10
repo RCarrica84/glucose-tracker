@@ -1,0 +1,47 @@
+{% extends "layout.html"%}
+
+{% block title %}
+    About
+{% endblock %}
+
+{% block main %}
+<body class="centered">
+    <div class="knowmore">
+<div class="card-container2">
+    <div class="glass-card2">
+        <h3>How this project started</h3>
+        <p>ALL RIGHT! It all started like this:</p>
+            <div>
+                <img src="static/images/hellome.png" alt="Hello image" class="responsive-img">
+                <p>(Pset from week 1)</p>
+            </div>
+
+<p>Hello, world! My name is Roberta C. I'm from the western EU. This application project started as part of Harvard CS50x "Introduction to Computer
+Science" class.</p>
+<p>
+This is my final project, and it consists of a full application runned in Flask. The app let's a user, a diabetic patient, measure insulin dosage. The application
+works for both the registered and the unregistered user. The unregistered user will have full access to the calculation card as well as instructions,
+located at "Know More" button.</p>
+        </p>
+        <p>For the registered user, the app will display preloaded values (set by the user) that will be used for the calculation. Below the calculation card,
+            the user will see a chart with his/ hers glycemia values. The user will be able to update values used for calculation directly on the calculation card,
+            making this feature very user friendly. All values can also be updated on the Settings page.</p>
+            <p>The History page is very useful to both the user and healhy pratictioners. It displays a blood glucose percentage chart of last 24 hours.
+                A second feature is a glycemia table displaying the last 10 glycemia values of last 48 hours, and the third feature is a chart "inspired"
+                on Continuous Glucose Monitors (CGM). The chart display glycemia values of last 72 hours, it has a high and low zone, and a dangerous zone
+                that marks every episode of hypoglycemia. These logs, along with other diabetic devices can help health pratictioners adjust insulin values
+                for patients that don't have access to insulin pumps, nor CGM sensors.</p>
+                <div>
+                    <img src="static/images/glucose chart.png" alt="Glucose Chart" class="responsive-img">
+                </div>
+
+                <p>With this project I was able to put into practice knowledge acquaried from CS50 and from my own research.</p>
+
+     <p>CS50 was a short 3 and half months, but a super intense experience. I can't wait to take CS50P!</p>
+        <p>AND THIS WAS CS50!</p>
+    </div>
+</div>
+</div>
+</body>
+
+{% endblock %}

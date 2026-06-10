@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+
+
+    <form action="/login" method="post">
+        <div class="card-container">
+                <div class="glass-card">
+                    <h3>Log In</h3>
+                        <input autocomplete="off" autofocus type="text" name="username" placeholder="Username" />
+                        <input type="password" name="password" placeholder="Password" />
+                        <button type="submit">Log In</button>
+                        <div>
+                        <a href="/register" class="redirect">Don't have an account? Register here!</a>
+                        </div>
+                </div>
+        </div>
+    </form>
+    <div>
+        <a href="/forgot" class="redirect">Forgot/ change password</a>
+    </div>
+{% endblock %}

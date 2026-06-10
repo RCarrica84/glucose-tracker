@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+        <div class="card-container">
+                <div class="glass-card">
+                    <form action="/register" method="post">
+                    <h3>Register</h3>
+                    <h6>1. Personal Info</h6>
+                    <h6>(All fields required)</h6>
+
+                        <input type="text" name="first_name" placeholder="First name" required />
+                        <input type="text" name="last_name" placeholder="Last name" required />
+                        <input type="date" name="dob" placeholder="Date of birth" required />
+                        <input type="email" name="email" placeholder="Email address" required />
+
+                        <input type="text" name="username" placeholder="Username" required />
+                        <input type="password" name="password" placeholder="Password" required />
+                        <input name="confirmation" placeholder="Confirm password" type="password" required />
+                </div>
+
+                <div class="glass-card">
+                    <h3>Register</h3>
+                    <h6>2. Diabetes Settings</h6>
+                    <h6>(All fields required)</h6>
+
+                        <input type="text" name="icr" placeholder="ICR" required />
+                        <input type="text" name="isf" placeholder="ISF" required />
+                        <input type="text" name="target_glucose" placeholder="Target glucose (default 100)" required />
+
+                        <select name="target_range">
+                            <option value="" disabled selected>Pre-bolus target range</option>
+                            <option value="80-130">80-130 (adult)</option>
+                            <option value="90-120">90-120 (child)</option>
+                            <option value="custom">Custom</option>
+                        </select>
+
+                        <input type="text" name="target_min" placeholder="Min" disabled>
+                        <input type="text" name="target_max" placeholder="Max" disabled>
+
+                        <button type="submit">Register</button>
+                        <div>
+                            <a href="/login" class="redirect">Already registered? Log in here</a>
+                        </div>
+                    </form>
+                </div>
+        </div>
+
+
+    <!--script for select button-->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const rangeSelect = document.querySelector('select[name="target_range"]');
+            const minInput = document.querySelector('input[name="target_min"]');
+            const maxInput = document.querySelector('input[name="target_max"]');
+
+            function updateFields() {
+                if (rangeSelect.value ==="custom") {
+                    minInput.required = true;
+                    maxInput.required = true;
+                    minInput.disabled = false;
+                    maxInput.disabled = false;
+                } else {
+                    minInput.required = false;
+                    maxInput.required = false;
+                    minInput.disabled = true;
+                    maxInput.disabled = true;
+
+                    //This will disable min and max input if user changes his mind and select 80-130 for example
+                    minInput.value = "";
+                    maxInput.value = "";
+                }
+            }
+
+            rangeSelect.addEventListener("change", updateFields);
+
+            // run once load
+            updateFields();
+        });
+    </script>
+
+{% endblock %}

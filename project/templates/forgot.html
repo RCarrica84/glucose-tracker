@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}Forgot Password{% endblock %}
+
+{% block main %}
+
+<div class="card-container">
+    <div class="glass-card">
+        <h6>Enter your account email and we'll provide a reset link below.</h6>
+        <form method="post" novalidate>
+            <input type="email" name="email" placeholder="Email address"
+                    value="{{ email if email else ''}}" required />
+
+            <button type="submit">Generate Reset Link</button>
+
+            {% if link %}
+
+                <h6>Click link below to reset your password.</h6>
+                <a href="{{ link }}" class="redirect">Reset my password</a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}

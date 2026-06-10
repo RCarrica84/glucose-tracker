@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width initial-scale=1.0">
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+     <div class="flash-container">
+       {% for message in messages %}
+         <div class="flash-message">
+             <p>{{ message }}</p>
+         </div>
+       {% endfor %}
+     </div>
+  {% endif %}
+{% endwith %}
+
+
+<title>DiabetesApp: {% block title %}{% endblock %}</title>
+
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+        <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+        <script>
+            // Run script once DOM is loaded
+            document.addEventListener('DOMContentLoaded', function() {
+
+                // Get all elements with class "correct"
+                let buttons = document.querySelectorAll('.lighten');
+
+                buttons.forEach(function(button) {
+
+                    button.addEventListener('mouseover', function() {
+                        button.style.color = '#3582B8';
+                });
+                button.addEventListener('mouseout', function() {
+                    button.style.color = '#023172';
+                });
+             });
+          });
+
+
+          // Function for hamburguer menu
+          function toggleMenu() {
+            const menu = document.getElementById("menu");
+            menu.style.display =
+              menu.style.display === "block" ? "none" : "block";
+          }
+
+
+          // Script for flash messages. Make disappear after 3 seconds
+          setTimeout(() => {
+            const flash = document.querySelector('.flash-container');
+            if (flash) {
+                flash.style.opacity = '0';
+                flash.style.transition = 'opacity 0.5s ease';
+            }
+          }, 3000);
+
+        </script>
+    </head>
+
+    <body class="centered">
+        <nav class="navbar">
+
+            <div>
+                <img>
+            </div>
+            <!--Center buttons-->
+            <div class="nav-center">
+                <a href="{{ url_for('about') }}" class="button lighten">About</a>
+                <a href="{{ url_for('knowmore') }}" class="button lighten">Know more</a>
+
+            </div>
+
+            <!--Righ hamburguer-->
+            <div class="menu-container">
+                <!--Hamburguer Icon-->
+                <div class="hamburguer" onclick="toggleMenu()">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+
+                <div class="dropdown" id="menu">
+
+                    <a href="{{ url_for('index') }}">Calculate</a>
+                    <a href="{{ url_for('history') }}">History</a>
+                    <a href="{{ url_for('login') }}">Login</a>
+                    <a href="{{ url_for('register') }}">Register</a>
+                    <a href="{{ url_for('logout') }}">Logout</a>
+
+                    {% if session.user_id %}
+                    <a href="{{ url_for('settings') }}">Settings</a>
+                    {% endif %}
+                </div>
+            </div>
+
+        </nav>
+
+        <main>
+            {% block main %}{% endblock %}
+        </main>
+
+    </body>
+
+</html>
+
+
+
+
+
+
+
+

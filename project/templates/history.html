@@ -1,0 +1,186 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+
+<div class="card-container">
+    <div class="glass-card">
+        <h3>Pre-bolus Target Range</h3>
+        <h6>Displaying target range of last 24 hours</h6>
+
+        <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg"
+                d="M18 2.0845
+                a 15.9155 15.9155 0 0 1 0 31.831
+                a 15.9155 15.9155 0 0 1 0 -31.831"
+            />
+            <path class="circle"
+                stroke-dasharray="{{ percentage }}, 100"
+                d="M18 2.0845
+                a 15.9155 15.9155 0 0 1 0 31.831
+                a 15.9155 15.9155 0 0 1 0 -31.831"
+                stroke ="{% if percentage < 50 %}red
+                {% elif percentage < 70 %}orange
+                {% else %}#4CC790
+                {% endif %}"
+            />
+            <text x="18" y="20.35" class="percentage">{{ percentage }}%</text>
+      </svg>
+
+    </div>
+</div>
+
+<div class="card-container">
+    <div class="glass-card">
+    <h3>Glycemia</h3>
+    <h6>Displaying glycemia values of last 48 hours (Limit 10)</h6>
+        <table>
+            <thead>
+                <tr>
+                    <th>Glycemia</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in table_logs %}
+                <tr>
+                    <td class="col1">{{ log.glycemia }}</td>
+
+                    <td class="col2">{{ log.timestamp }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="card-container2">
+    <div class="glass-card2">
+        <h3>Glucose Chart - 72 Hours</h3>
+
+        <canvas id="glucoseChart"></canvas>
+    </div>
+</div>
+
+
+<!-- Add Chart.js-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- The <script> is for the glucose log chart that will display glycemia values-->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    //const logs = JSON.parse('{{ logs | default([]) | tojson | safe }}');
+    const logs = {{ logs | tojson }};
+
+    if (!logs || logs.length === 0) return;
+
+    const labels = logs.map(log => log.time_label);
+    const values = logs.map(log => log.glycemia);
+
+    const low = 70;
+    const high = 180;
+
+    const canvas = document.getElementById('glucoseChart');
+    if (!canvas) return; // prevents crash if canvas not present
+
+    const ctx = canvas.getContext('2d');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                // LOW ZONE
+                {
+                    label: 'Low',
+                    data: labels.map(() => low),
+                    borderWidth: 0,
+                    fill: true,
+                    backgroundColor: 'rgba(255, 0, 0, 0.35)'
+                },
+                // HIGH ZONE
+                {
+                    label: 'In-Range',
+                    data: labels.map(() => high),
+                    borderWidth: 0,
+                    fill: '-1',
+                    backgroundColor: 'rgba(0, 200, 0, 0.35)'
+
+                },
+                // YOUR GLUCOSE LINE
+                {
+                    label: 'Glycemia',
+                    data: values,
+                    borderColor: values.map(v =>
+                        v < low ? 'red' :
+                        v > high ? 'orange' :
+                        'lime'
+                    ),
+                    segment: {
+                        borderColor: ctx => {
+                            const v = ctx.p0.parsed.y;
+                            if (v < low) return 'red';
+                            if (v > high) return 'orange';
+                            return 'lime';
+                        }
+                    },
+                    // Higher tension makes line curvy. Example tension: 0.3
+                    tension: 0,
+                    pointRadius: 3
+                },
+                {
+                    label: 'Low Zone',
+                    data: labels.map(() => low),
+                    borderColor: 'green',
+                    borderDash: [5, 5],
+                    pointRadius: 0
+                },
+                {
+                    label: 'High Zone',
+                    data: labels.map(() => high),
+                    borderColor: 'green',
+                    borderDash: [5, 5],
+                    pointRadius: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#ffffff'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: '#ccc'}
+                },
+                y: {
+                    ticks: { color: '#ccc'},
+                    suggestedMin: 50,
+                    suggestedMax: 250
+                }
+            }
+        }
+    });
+
+});
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

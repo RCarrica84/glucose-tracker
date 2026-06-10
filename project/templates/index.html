@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Calculate Insulin
+{% endblock %}
+
+{% block main %}
+
+<form action="/" method="post">
+    <div class="card-container">
+        <div class="glass-card">
+            <h3>Calculate Insulin</h3>
+
+
+                <input type="text" name="icr" placeholder="Insulin carbohydrate ratio - ICR"
+                        value="{{ icr if icr else '' }}"/>
+
+                <input type="text" name="carbohydrate_content" placeholder="Carbohydrate content" />
+
+                <input type="text" name="isf" Placeholder="Insulin sensitivity factor - ISF"
+                        value="{{ isf if isf else '' }}" />
+
+                <input type="text" name="glycemia" placeholder="Glycemia/ Blood sugar" />
+
+                <input type="text" name="target_glucose" placeholder="Target glucose(default: 100)"
+                        value="{{ target_glucose if target_glucose else '' }}" />
+
+                <button name="action" value="calculate">Calculate</button>
+
+                {% if session.user_id %}
+                    <button name="action" value="save_settings">Save ICR/ISF and Target glucose</button>
+                {% endif %}
+
+                {% if insulin %}
+                    <p>Your insulin dose: {{ insulin }} units</p>
+                {% endif %}
+
+                {% if saved %}
+                    <p>Settings saved!</p>
+                {% endif %}
+        </div>
+    </div>
+</form>
+<div>
+
+    <a href="/register" class="redirect">First time user? Register to save your ICR/ ISF/ Target glucose!</a>
+</div>
+
+{% if session.user_id %}
+
+<div class="card-container2">
+    <div class="glass-card2">
+        <h3>Glucose Chart - 72 Hours</h3>
+        <canvas id="glucoseChart"></canvas>
+    </div>
+</div>
+{% endif %}
+
+
+<!-- Add Chart.js-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- The <script> is for the glucose log chart that will display glycemia values-->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    const logs = {{ logs | tojson }};
+    const target = {{ target_glucose | default(100) }};
+
+    if (!logs || logs.length === 0) return;
+
+    const labels = logs.map(log => log.time_label);
+    const values = logs.map(log => log.glycemia);
+
+    const canvas = document.getElementById('glucoseChart');
+    if (!canvas) return; // prevents crash if canvas not present
+
+    const ctx = canvas.getContext('2d');
+
+    //Change font color to white
+    Chart.defaults.color = '#ffffff';
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Glycemia',
+                    data: values,
+                    fill: false,
+                    tension: 0.1,
+                    borderColor: '#85B6D6'
+                },
+                {
+                    label: `Target (${target})`,
+                    data: values.map(() => target),
+                    borderDash: [5, 5],
+                    borderColor: 'red'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+
+});
+</script>
+
+{% endblock %}
+
+
+
+
+
